@@ -52,12 +52,8 @@ coverage.xml
 # Django stuff:
 *.log
 
-*.env
-.env
-
 # Sphinx documentation
 docs/_build/
 
 # PyBuilder
 target/
-COMPOSE_SKIP_ENV_FILE=1
