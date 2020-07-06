@@ -15,7 +15,7 @@
     <div style="text-align: center;">
     <h1>Congrats! You have successfully hashed your URL.</h1> <br> </br>
     <span>
-        Hashed URL: <strong><a href="http://localhost:8000/{{hashed_url}}">http://localhost:8000/{{hashed_url}}</a> 
+        Hashed URL: <strong><a href="http://{{request.get_host}}/{{hashed_url}}">http://{{request.get_host}}/{{hashed_url}}</a> 
     </span>
     </div>
   {% endif %}
