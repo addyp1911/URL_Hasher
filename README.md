@@ -36,7 +36,7 @@ docker-compose up -d
 
 ### Open the WebApp in Browser
 Open [http://host:port/home](http://host:port/home)
-The home page will be displayed which will show a form to enter the url, along with
+The home page will be displayed which will show a form to enter the url, along with URL, Campaign, Source, and Medium fields.
 
 ### Shorten URL
 Enter a URL in the text box
