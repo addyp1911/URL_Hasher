@@ -3,7 +3,7 @@ from django.forms import Form
 
 
 class URLForm(Form):
-    url = forms.URLField(required=True, max_length=100, label='Your URL')
+    url = forms.URLField(required=True, label='Your URL')
     utm_campaign = forms.CharField(required=False, label='Your UTM campaign')
     source = forms.CharField(
         required=False, max_length=100, label='Your UTM source')
