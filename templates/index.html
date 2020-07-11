@@ -4,13 +4,14 @@
 
 {% block content %}
   {% if not hashed_url %}
-  <h1>Create Hashed URLs </h1>
-  <form action="{% url 'get_hashed_url' %}" method="get">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button type="submit" class="btn btn-primary">Submit</button>
-     {% endif %}
-  </form>
+    <h1>Create Hashed URLs </h1>
+    <form action="{% url 'get_hashed_url' %}" method="get">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-primary">Submit</button>
+     </form>
+  {% endif %}
+
   {%if hashed_url %}
     <div style="text-align: center;">
     <h1>Congrats! You have successfully hashed your URL.</h1> <br> </br>

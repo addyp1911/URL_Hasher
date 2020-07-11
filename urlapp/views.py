@@ -20,26 +20,35 @@ def home(request):
 
 def url_hashing(request):
     if request.method == 'GET':
+        params = request.GET
         form = URLForm(request.GET)
         if form.is_valid():
-            url = form.cleaned_data['url']
-        params = {"utm_campaign": form.cleaned_data['utm_campaign'],
-                  "utm_medium": form.cleaned_data["utm_medium"], "source": form.cleaned_data["source"]}
+            form_data = form.data.dict()
+            url = form_data.get("target_url")
+        params = {"utm_campaign": form_data.get('utm_campaign'),
+                  "utm_medium": form_data.get("utm_medium"), "source": form_data.get("source")}
+        if not params.get("utm_campaign"):
+            params.pop("utm_campaign")
+        if not params.get("source"):
+            params.pop("source")
+        if not params.get("utm_medium"):
+            params.pop("utm_medium")
         url_parse = ps_url.urlparse(url)
         query = url_parse.query
         url_dict = dict(ps_url.parse_qsl(query))
-        url_dict.update(params)
+        if params:
+            url_dict.update(params)
         url_new_query = ps_url.urlencode(url_dict)
         url_parse = url_parse._replace(query=url_new_query)
         new_url = ps_url.urlunparse(url_parse)
-        hashObject = hashlib.md5(url.encode('utf-8'))
+        hashObject = hashlib.md5(new_url.encode('utf-8'))
         hashed_url = hashObject.hexdigest()[:8]
         try:
             check_if_url_already_exists = URLs.objects.get(
                 hashed_url=hashed_url)
         except URLs.DoesNotExist:
-            hashed_url = URLs(hashed_url=hashed_url, target_url=new_url)
-            hashed_url.save()
+            hashed_url_obj = URLs(hashed_url=hashed_url, target_url=new_url)
+            hashed_url_obj.save()
         return render(request, 'index.html', {
             'hashed_url': hashed_url
         })
