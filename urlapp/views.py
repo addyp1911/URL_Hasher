@@ -26,7 +26,8 @@ def url_hashing(request):
             form_data = form.data.dict()
             url = form_data.get("target_url")
         params = {"utm_campaign": form_data.get('utm_campaign'),
-                  "utm_medium": form_data.get("utm_medium"), "source": form_data.get("source")}
+                  "utm_medium": form_data.get("utm_medium"),\
+                  "source": form_data.get("source")}
         if not params.get("utm_campaign"):
             params.pop("utm_campaign")
         if not params.get("source"):
