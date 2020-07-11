@@ -36,7 +36,8 @@ docker-compose up -d
 
 ### Open the WebApp in Browser
 Open [http://host:port/home](http://host:port/home)
-[18.221.112.78:8000 is the host address of my application hosted on EC2 instance]
+
+[18.191.89.2:8000 is the host address of my application on EC2 instance]
 The home page will be displayed which will show a form to enter the url, along with URL, Campaign, Source, and Medium fields.
 
 ### Shorten URL

@@ -54,6 +54,7 @@ def url_hashing(request):
             'hashed_url': hashed_url
         })
 
+
 def retrieve_target_url(request, input_url):
     target = get_object_or_404(URLs, hashed_url=input_url)
     target_url = target.target_url
