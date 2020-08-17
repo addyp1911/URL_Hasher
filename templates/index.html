@@ -4,19 +4,47 @@
 
 {% block content %}
   {% if not hashed_url %}
-    <h1>Create Hashed URLs </h1>
+    <h3>Create Hashed URLs </h3>
     <form action="{% url 'get_hashed_url' %}" method="get">
       {% csrf_token %}
+      {% for message in messages %}
+          <div class="alert alert-info alert-dismissible" id="error_msg" style="color: black;"{{ message.tags }} role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+              {{ message }}
+          </div>
+          {% endfor %}
+          <p> </p>
+      <script>
+          setTimeout(function(){
+          if ($('#error_msg').length > 0) {
+              $('#error_msg').remove();
+          }
+          }, 2000)
+      </script>
       {{ form|crispy }}
-      <button type="submit" class="btn btn-primary">Submit</button>
-     </form>
+      <div class="text-center">
+      <button type="submit" class="btn btn-primary">Create a hashed URL</button>
+       </div>
+      </form>
+          <p> </p>
+      <span style="color: black" align="center"> <h3> OR </h3>  </span>
+      <form action="{% url 'search-pages' %}" method="GET" role="form">
+       <div class="text-center">                 
+      <button type="submit" class="btn btn-primary">Click this button to enter a url and search keyword</button>
+     </div>
+      </form>
+
+
   {% endif %}
 
   {%if hashed_url %}
     <div style="text-align: center;">
     <h1>Congrats! You have successfully hashed your URL.</h1> <br> </br>
     <span>
-        Hashed URL: <strong><a href="http://{{request.get_host}}/{{hashed_url}}">http://{{request.get_host}}/{{hashed_url}}</a> 
+        <b>Hashed URL </b>: <strong><a href="http://{{request.get_host}}/{{hashed_url}}">http://{{request.get_host}}/{{hashed_url}}</a>
+        <p><b>Total no of hits </b> : {{total_url_hits}} </p> 
     </span>
     </div>
   {% endif %}

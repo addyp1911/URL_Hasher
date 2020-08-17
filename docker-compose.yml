@@ -9,3 +9,4 @@ services:
       - .:/myproject
     ports:
       - 8000:8000
+    

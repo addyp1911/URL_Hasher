@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
 from urlapp import views
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^home/', views.home, name="home"),
-    url(r'^get_hashed_url/$',views.url_hashing,name="get_hashed_url"),
-    url(r'^(?P<input_url>[0-9a-zA-Z]+)/$',views.retrieve_target_url,name="retrieve_url"),
+    url(r'^home/', csrf_exempt(views.home), name="home"),
+    url(r'^get_hashed_url/$', csrf_exempt(views.url_hashing), name="get_hashed_url"),
+    url(r'^(?P<input_url>[0-9a-zA-Z]+)/$', csrf_exempt(views.retrieve_target_url), name="retrieve_url"),
+    url(r'^search-keyword/$', csrf_exempt(views.search), name="search-pages"),
 
 ]

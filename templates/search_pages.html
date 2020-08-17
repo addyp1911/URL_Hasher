@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h3>Search pages with your entered URL</h3>
+    <form action="{% url 'search-pages' %}" method="POST">
+      {% csrf_token %}
+      {% for message in messages %}
+          <div class="alert alert-info alert-dismissible" id="error_msg" style="color: black;"{{ message.tags }} role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+              {{ message }}
+          </div>
+          {% endfor %}
+          <p> </p>
+      <script>
+          setTimeout(function(){
+          if ($('#error_msg').length > 0) {
+              $('#error_msg').remove();
+          }
+          }, 2000)
+      </script>
+      {{ search_form|crispy }}
+      <div class="text-center">
+      <button type="submit" class="btn btn-primary">Search pages</button>
+       </div>
+      </form>
+
+{% endblock %}
