@@ -61,13 +61,10 @@ def url_hashing(request):
                 return render(request, 'index.html', {
                     'hashed_url': hashed_url, "total_url_hits":total_url_hits
                 })
-            else:
-                messages.warning(request, "Something went wrong!")   
     except AssertionError as ex:
         messages.warning(request, str(ex))   
     except Exception as ex:
         form = URLForm()
-        messages.warning(request, "Something went wrong!")    
     return render(request, 'index.html', {'form': form})     
 
 
@@ -103,13 +100,13 @@ def search(request):
                 pagenumber = request.GET.get('page', 1)
                 paginator = Paginator(result_links, 10)
                 res_data = list(paginator.page(pagenumber).object_list)
-                links = paginate(res_data, paginator, pagenumber)
+                links = paginator.get_page(pagenumber)
                 return render(request,  'pages_list.html', {'links': links})
             else:
                 form = SearchForm()
         except AssertionError as ex:
             messages.warning(request, str(ex))
         except Exception as ex:
-            messages.warning(request, "Something went wrong!")
+            form = SearchForm()
         return render(request, 'search_pages.html', {'form': form})     
          
