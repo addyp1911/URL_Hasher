@@ -1,26 +1,28 @@
 from __future__ import unicode_literals
+from bs4 import BeautifulSoup
+import requests, urllib, hashlib
+from urllib import parse as ps_url
+
+#project imports
+from .utils import *
+from .forms import *
+from .models import URLs
+
+#django imports
+from urllib.parse import urljoin
+from django.contrib import messages
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage
-from .models import URLs
-from urllib import parse as ps_url
-import urllib
-import hashlib
-from .forms import *
-from bs4 import BeautifulSoup
-import requests
-from urllib.parse import urljoin
-from django.contrib import messages
-from .utils import *
+
 
 def home(request):
     form = URLForm(request.GET) if request.method == "GET" else URLForm()
     search_form = SearchForm(request.GET) if request.method == "GET" else SearchForm()
     return render(request, 'index.html', {'form': form, "search_form": search_form})
-
 
 def url_hashing(request):
     try:
@@ -63,6 +65,9 @@ def url_hashing(request):
                 messages.warning(request, "Something went wrong!")   
     except AssertionError as ex:
         messages.warning(request, str(ex))   
+    except Exception as ex:
+        form = URLForm()
+        messages.warning(request, "Something went wrong!")    
     return render(request, 'index.html', {'form': form})     
 
 
