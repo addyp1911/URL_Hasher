@@ -6,7 +6,7 @@ from urllib import parse as ps_url
 #project imports
 from .utils import *
 from .forms import *
-from .models import URLs
+from .models import *
 
 #django imports
 from urllib.parse import urljoin
@@ -52,14 +52,15 @@ def url_hashing(request):
                 hashObject = hashlib.sha256(new_url.encode('utf-8'))
                 hashed_url = hashObject.hexdigest()[:8]
                 try:
-                    response_url = URLs.objects.get(
+                    hashed_url_obj = URLs.objects.get(
                         hashed_url=hashed_url)
                 except URLs.DoesNotExist:
                     hashed_url_obj = URLs(hashed_url=hashed_url, target_url=new_url)
-                    response_url = hashed_url_obj.save()
-                total_url_hits = response_url.total_url_hits
+                    hashed_url_obj.save()
+                total_url_hits = hashed_url_obj.total_url_hits
+                hourly_hits = hashed_url_obj.hourly_hits
                 return render(request, 'index.html', {
-                    'hashed_url': hashed_url, "total_url_hits":total_url_hits
+                    'hashed_url': hashed_url, "total_url_hits":total_url_hits, "hourly_hits":hourly_hits
                 })
     except AssertionError as ex:
         messages.warning(request, str(ex))   
@@ -72,6 +73,12 @@ def retrieve_target_url(request, input_url):
     from django.db.models import F
     target = get_object_or_404(URLs, hashed_url=input_url)
     target_url = target.target_url
+    url_hits = URLHits.objects.create(url=target, date=datetime.datetime.now())
+    start, end = get_date_range()
+    daily_hits = URLHits.objects.filter(url__target_url=target_url, date__range=(start, end)).count()
+    hourly_hits = round(daily_hits/24, 3) if daily_hits else 0
+    target.hourly_hits  = hourly_hits
+    target.save()
     URLs.objects.filter(pk=target.pk).update(total_url_hits=F('total_url_hits')+1)
     if(target_url[:4] != 'http'):
         target_url = 'http://'+ target_url
@@ -88,18 +95,10 @@ def search(request):
         try:
             if form.is_valid():
                 form_data = form.data.dict()
-                url = form_data.get("search_url")
                 search_params = form_data.get("search_keyword")
-                response_data = requests.get(url)
-                page = BeautifulSoup(response_data.content, features="html.parser")
-                matched_links = lambda tag: (getattr(tag, 'name', None) == 'a' and
-                                'href' in tag.attrs and
-                                search_params in tag.get_text().lower())
-                results = page.find_all(matched_links)
-                result_links = [urljoin(url, tag['href']) for tag in results]
+                result_list = URLs.objects.filter(target_url__icontains=search_params)
                 pagenumber = request.GET.get('page', 1)
-                paginator = Paginator(result_links, 10)
-                res_data = list(paginator.page(pagenumber).object_list)
+                paginator = Paginator(result_list, 10)
                 links = paginator.get_page(pagenumber)
                 return render(request,  'pages_list.html', {'links': links})
             else:

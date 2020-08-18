@@ -1,3 +1,4 @@
+{% load mathfilters %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,7 +9,7 @@
 <style>
 h3 {text-align: center;}
 </style>
-<h3 class="font-weight-light mb-4 font-italic text-black" style="white-space: nowrap;" ><light>Your search links </light></h3>
+<h3 class="font-weight-light mb-4 font-italic text-black" style="white-space: nowrap;" ><light>Your matched links </light></h3>
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -164,14 +165,20 @@ $(document).ready(function(){
                     <thead>
                         <tr>
                             <th>No.<i class="fa fa-sort"></i></th>
-                            <th>URL Links</th>
+                            <th>Target URL Links</th>
+                            <th> Hashed URL Links </th>
+                            <th> Total URL Hits </th>
+                            <th> Hourly URL Hits </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                           {% for link in links %}
                             <td> {{ forloop.counter }}</td>
-                            <td> <a href={{link}}> {{link}} </a></td>
+                            <td> <a href={{link.target_url}}> {{link.target_url}} </a></td>
+                            <td> <a href="http://{{request.get_host}}/{{link.hashed_url}}">http://{{request.get_host}}/{{link.hashed_url}}</a></td>
+                            <td> {{link.total_url_hits}} </td>
+                            <td> {{link.hourly_hits}}</td>
                         </tr>
                           {% endfor %}
                  </tbody>

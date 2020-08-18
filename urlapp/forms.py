@@ -17,9 +17,8 @@ class URLForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
-    search_url = forms.CharField(required=True, max_length=100000, label='Your URL', validators=[url_validator])
     search_keyword = forms.CharField(required=True, max_length=500, label='Your search keyword')
 
     class Meta:
         # Provide the association between a model form and a model
-        fields = ("search_url", "search_keyword")
+        fields = ("search_keyword")

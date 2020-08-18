@@ -1,5 +1,6 @@
 
 import re
+import datetime
 
 def url_validator(value):
     """A custom method to validate any website url """
@@ -15,4 +16,7 @@ def url_validator(value):
     return value
 
 
-  
+def get_date_range():
+    today = datetime.datetime.now()
+    yesterday = today - datetime.timedelta(days=1)
+    return yesterday, today
